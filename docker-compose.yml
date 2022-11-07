@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+    chrome:
+        image: seleniarm/standalone-chromium:latest
+        ports:
+          - 4444:4444
+          - 5900:5900
+        environment:
+          - JAVA_OPTS=-Dwebdriver.chrome.whitelistedIps=
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:4444"]
+          interval: 30s
+          timeout: 10s
+          retries: 5
+
