@@ -12,6 +12,7 @@ To run this project, the following need to be available.
 1. Clone the project from Github.
 
 2. To run the service, in the root folder, run;
+(Note: This has been tested on the apple M1 architecure only).
 ```
 docker compose up --build
 ```
@@ -21,9 +22,11 @@ docker compose up
 ```
 3. Start the google meeting.
 4. On your browser, (preferably Chrome), visit [http://localhost:8000](http://localhost:8000).
+![user interface](./docs/UI.png)
 5. Enter the google meet URL, the bot name and optionally, a message that the bolt will post to the chat after joining the call. Click the "Create bot" button.
 6. While in the meeting, wait for the bot to request access to the meeting. On the dialog, click Admit.
-7. Once th bot has joined the call, wait for it to chat message to come in.
+![admit](./docs/admit.png)
+7. Once the bot has joined the call, wait for it to chat message to come in.
 
 ### ToDo;
 1. Allow more interactions with the bot from the UI. These interactions could include:
