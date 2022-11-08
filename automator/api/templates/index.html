@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <style>
+        body{
+            background-color: #8C8C8C;
+            font-family: 'Roboto';
+            font-size: 18px;
+            margin: 50px;
+        }
+
+        h1{
+            color: #8c8c8c;
+        }
+
+        input:required {
+            background-color: yellow;
+        }
+
+        #createBot{
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+            background-color: #597ef7;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            float: right;
+            cursor: pointer;
+            margin-right: 20px;
+            margin-top: 20px;
+        }
+        .user-input{
+            height: 30px;
+            line-height: 28px;
+            width: 75%;
+        }
+        #chatMessage{
+            width: 100%;
+            float: right;
+        }
+        .user-input-form{
+            border: 1px solid black;
+            border-radius: 3px;
+            width: 50%;
+            padding: 20px;
+            display: inline-block;
+        }
+        .user-input-label{
+            width: 20%;
+            display: inline-block;
+        }
+        .user-inputs{
+            width: 100%;
+            line-height: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%; height: 100%; background-color: white; padding: 10px; border-radius: 5px;">
+
+        <h1>Google Meet Bot</h1>
+        <div style="margin: 20px; padding: 10px; ">
+            <form class="user-input-form" method="dialog">
+                    <div class="user-inputs">
+                        <label class="user-input-label" for="meetingURL">Google meet URL:</label>
+                        <input class="user-input" type="text" id="meetingURL" name="meetingURL">
+                    </div>
+
+                    <div class="user-inputs">
+                        <label class="user-input-label" for="attendanceName">Bot name:</label>
+                        <input class="user-input" type="text" id="attendanceName" name="attendanceName">
+                    </div>
+
+                    <div class="user-inputs">
+                        <input type="checkbox" id="sendChat" name="sendChat" value="sendChat">
+                        <label for="sendChat"> (Optional) Send chat message after joining call</label>
+                    </div>
+
+                    <div class="user-inputs">
+                        <textarea placeholder="Input your chat message" name="chatMessage" id="chatMessage" cols="50" rows="5"></textarea>
+                    </div>
+
+                    <div class="user-inputs">
+                        <button id="createBot">Start bot</button>
+                    </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+        const checkbox = document.getElementById('sendChat');
+        const chatMessageTextArea = document.getElementById('chatMessage');
+        const meetingurlInput = document.getElementById('meetingURL')
+        const attendanceNameInput = document.getElementById('attendanceName')
+        const submitButtom = document.getElementById('createBot')
+
+        // hide chat message text area by default
+        chatMessageTextArea.hidden = true
+
+        checkbox.addEventListener('change', (e) => {
+            // listen to the checkbox events to show or hide textarea
+            chatMessageTextArea.hidden = !chatMessageTextArea.hidden
+        });
+
+        chatMessageTextArea.addEventListener('input', (e) => {
+            // get input in the text area and set it to textarea value
+            chatMessageTextArea.value = e.target.value
+        });
+
+        submitButtom.addEventListener('click', (e) => {
+            const body = {
+                meetingURL: meetingurlInput.value,
+                attendanceName: attendanceNameInput.value,
+                chatMessage: chatMessageTextArea.value
+            }
+
+            fetch("http://localhost:8000/bot/",
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify(body)
+            })
+            .then(res => res.json())
+            .then((data) => {
+                const sessionID = data.sessionID
+                console.log(sessionID)
+                var source = new EventSource(`http://localhost:8000/updates/${sessionID}/`);
+                source.onmessage = function(event) {
+                    // document.getElementById("result").innerHTML += event.data + "<br>";
+                    console.log(event.data)
+                };
+            })
+            .catch((resp) => { console.log(resp, "something else happend")})
+        })
+        
+    </script>
+
+</body>
+</html>
