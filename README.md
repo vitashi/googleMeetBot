@@ -22,10 +22,8 @@ docker compose up
 ```
 3. Start the google meeting.
 4. On your browser, (preferably Chrome), visit [http://localhost:8000](http://localhost:8000).
-![user interface](./docs/UI.png)
 5. Enter the google meet URL, the bot name and optionally, a message that the bolt will post to the chat after joining the call. Click the "Create bot" button.
 6. While in the meeting, wait for the bot to request access to the meeting. On the dialog, click Admit.
-![admit](./docs/admit.png)
 7. Once the bot has joined the call, wait for it to chat message to come in.
 
 ### ToDo;
